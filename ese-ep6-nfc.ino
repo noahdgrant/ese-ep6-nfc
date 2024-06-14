@@ -14,21 +14,13 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 char uidBuffer[30];
 
 // Socket Variables and constants
-/*
+
 const char* ssid     = "ElevatorNetwork24Router";
 const char* password = "helloworld";
-*/
-const char* ssid     = "BELL275";
-const char* password = "rFamily@275";
 
-// Wyatt's laptop
-const char* host = "192.168.2.156";
-const uint16_t port = 5000;
-
-/*
+// Server IP & Port
 const char* host = "192.168.1.213";
 const uint16_t port = 12345;
-*/
 
 WiFiClient client;
 
