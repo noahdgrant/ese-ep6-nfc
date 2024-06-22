@@ -1,6 +1,7 @@
 // NFC Libraries
 #include <SPI.h>
 #include <MFRC522.h>
+#include "env.h" // contains Wifi SSID and password as well as server ip and port
 
 // Socket Libraries
 #include <WiFi.h>
@@ -13,24 +14,16 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 
 char uidBuffer[30];
 
-// Socket Variables and constants
-
-const char* ssid     = "ElevatorNetwork24Router";
-const char* password = "helloworld";
-
-// Server IP & Port
-const char* host = "192.168.1.213";
-const uint16_t port = 12345;
-
 WiFiClient client;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // setup NFC
   SPI.begin();          // Init SPI bus
 	mfrc522.PCD_Init();   // Init MFRC522
 	mfrc522.PCD_DumpVersionToSerial();
+	  
   delay(10);
 
   connectToWifi();
@@ -53,7 +46,6 @@ void loop() {
   Serial.println(uidBuffer);
   
   client.println(uidBuffer);
-
   // Wait for a response from the server
   Serial.println("Awaiting Response");
   while (client.available() == 0) {
@@ -69,7 +61,7 @@ void loop() {
     Serial.print("Response from Server: ");
     Serial.println(line);
   }
-  
+
   delay(1000); // Send data every 10 seconds
 }
 
@@ -97,11 +89,11 @@ void bytesToString(byte* byteArray, int length, char* stringBuffer) {
 void connectToServer(){
   // Connect to the server
   Serial.print("Connecting to ");
-  Serial.print(host);
+  Serial.print(host_env);
   Serial.print(':');
-  Serial.println(port);
+  Serial.println(port_env);
 
-  while (!client.connect(host, port)) {
+  while (!client.connect(host_env, port_env)) {
     delay(500);
     Serial.print(".");
   }
@@ -112,9 +104,9 @@ void connectToServer(){
 void connectToWifi(){
   // Connect to Wi-Fi
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(ssid_env);
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid_env, password_env);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
